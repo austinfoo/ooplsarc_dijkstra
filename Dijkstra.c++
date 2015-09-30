@@ -60,7 +60,7 @@ public:
 
 class Solution {
 public:
-  int cumm_length = -1;
+  int cumm_length = 1000000;
   VertexList path;
 };
 
@@ -109,7 +109,6 @@ VertexList dijkstra_eval (const Graph& graph, int start_vertex, int end_vertex)
 	else {
 	  q.emplace (vl.vertex, cumm_length, qe.path);
 	  q.back().path.push_back(vl.vertex);
-	  assert (v[vl.vertex].visited == false);
 	  v[vl.vertex].visited = true;
 	  v[vl.vertex].cumm_length = cumm_length;
 	}
@@ -129,7 +128,7 @@ void dijkstra_print (ostream& w, const VertexList& answer) {
     w << "-1" << std::endl;
   } else {
     for (int vertex : answer) {
-      w << vertex << " ";
+      w << vertex+1 << " ";
     }
     w << std::endl;
   }
@@ -158,8 +157,8 @@ void dijkstra_solve (istream& r, ostream& w) {
     int vertex2 = 0;
     int length = 0;
     sin >> vertex1 >> vertex2 >> length;
-    graph[vertex1].emplace_back(vertex2, length);
-    graph[vertex2].emplace_back(vertex1, length);
+    graph[vertex1-1].emplace_back(vertex2-1, length);
+    graph[vertex2-1].emplace_back(vertex1-1, length);
   }
 
   const VertexList answer = dijkstra_eval(graph, 0, num_vertices-1);
