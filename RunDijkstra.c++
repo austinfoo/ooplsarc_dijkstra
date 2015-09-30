@@ -1,7 +1,7 @@
 
 #include <iostream>
 
-#include "TwoButtons.h"
+#include "Dijkstra.h"
 
 // ----
 // main
@@ -9,6 +9,6 @@
 
 int main () {
     using namespace std;
-    twobuttons_solve(cin, cout);
+    dijkstra_solve(cin, cout);
     return 0;
 }

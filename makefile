@@ -1,22 +1,22 @@
 INCDIRS:=/Users/dmielke/Documents/oopl/trees/googletest/googletest/include
 LIBDIRS:=/Users/dmielke/Documents/oopl/trees/googletest/googletest/make
 
-FILES :=                              \
-    .travis.yml                       \
-    twobuttons-tests/EID-RunTwoButtons.in   \
-    twobuttons-tests/EID-RunTwoButtons.out  \
-    twobuttons-tests/EID-TestTwoButtons.c++ \
-    twobuttons-tests/EID-TestTwoButtons.out \
-    TwoButtons.c++                       \
-    TwoButtons.h                         \
-    TwoButtons.log                       \
-    html                              \
-    RunTwoButtons.c++                    \
-    RunTwoButtons.in                     \
-    RunTwoButtons.out                    \
-    TestTwoButtons.c++                   \
-    TestTwoButtons.out                   \
-    ColalatzBundle.c++
+FILES :=                                \
+    .travis.yml                         \
+    dijkstra-tests/EID-RunDijkstra.in   \
+    dijkstra-tests/EID-RunDijkstra.out  \
+    dijkstra-tests/EID-TestDijkstra.c++ \
+    dijkstra-tests/EID-TestDijkstra.out \
+    Dijkstra.c++                        \
+    Dijkstra.h                          \
+    Dijkstra.log                        \
+    html                                \
+    RunDijkstra.c++                     \
+    RunDijkstra.in                      \
+    RunDijkstra.out                     \
+    TestDijkstra.c++                    \
+    TestDijkstra.out                    \
+    DijkstraBundle.c++
 
 # Call gcc and gcov differently on Darwin
 ifeq ($(shell uname), Darwin)
@@ -39,23 +39,23 @@ clean:
 	rm -f *.gcda
 	rm -f *.gcno
 	rm -f *.gcov
-	rm -f RunTwoButtons
-	rm -f RunTwoButtons.tmp
-	rm -f TestTwoButtons
-	rm -f TestTwoButtons.tmp
-	rm -f TwoButtonsBundle
+	rm -f RunDijkstra
+	rm -f RunDijkstra.tmp
+	rm -f TestDijkstra
+	rm -f TestDijkstra.tmp
+	rm -f DijkstraBundle
 
 config:
 	git config -l
 
 bundle:
-	cat TwoButtons.h TwoButtons.c++ RunTwoButtons.c++ | sed -e "s/#include \"TwoButtons.h\"//g" > TwoButtonsBundle.c++
-	$(CXX) $(CXXFLAGS) $(GCOVFLAGS) TwoButtonsBundle.c++ -o TwoButtonsBundle
+	cat Dijkstra.h Dijkstra.c++ RunDijkstra.c++ | sed -e "s/#include \"Dijkstra.h\"//g" > DijkstraBundle.c++
+	$(CXX) $(CXXFLAGS) $(GCOVFLAGS) DijkstraBundle.c++ -o DijkstraBundle
 
 scrub:
 	make  clean
-	rm -f  TwoButtons.log
-	rm -rf twobuttons-tests
+	rm -f  Dijkstra.log
+	rm -rf dijkstra-tests
 	rm -rf html
 	rm -rf latex
 
@@ -66,21 +66,21 @@ status:
 	git remote -v
 	git status
 
-test: RunTwoButtons.tmp TestTwoButtons.tmp
+test: RunDijkstra.tmp TestDijkstra.tmp
 
-RunTwoButtons: TwoButtons.h TwoButtons.c++ RunTwoButtons.c++
-	$(CXX) $(CXXFLAGS) $(GCOVFLAGS) TwoButtons.c++ RunTwoButtons.c++ -o RunTwoButtons
+RunDijkstra: Dijkstra.h Dijkstra.c++ RunDijkstra.c++
+	$(CXX) $(CXXFLAGS) $(GCOVFLAGS) Dijkstra.c++ RunDijkstra.c++ -o RunDijkstra
 
-RunTwoButtons.tmp: RunTwoButtons
-	./RunTwoButtons < RunTwoButtons.in > RunTwoButtons.tmp
-	diff RunTwoButtons.tmp RunTwoButtons.out
+RunDijkstra.tmp: RunDijkstra
+	./RunDijkstra < RunDijkstra.in > RunDijkstra.tmp
+	diff RunDijkstra.tmp RunDijkstra.out
 
-TestTwoButtons: TwoButtons.h TwoButtons.c++ TestTwoButtons.c++
-	$(CXX) $(CXXFLAGS) $(GCOVFLAGS) TwoButtons.c++ TestTwoButtons.c++ -o TestTwoButtons $(LDFLAGS)
+TestDijkstra: Dijkstra.h Dijkstra.c++ TestDijkstra.c++
+	$(CXX) $(CXXFLAGS) $(GCOVFLAGS) Dijkstra.c++ TestDijkstra.c++ -o TestDijkstra $(LDFLAGS)
 
-TestTwoButtons.tmp: TestTwoButtons
-	./TestTwoButtons                                                   >  TestTwoButtons.tmp 2>&1
-	$(VALGRIND) ./TestTwoButtons                                       >> TestTwoButtons.tmp
-	$(GCOV) -b TwoButtons.c++     | grep -A 5 "File 'TwoButtons.c++'"     >> TestTwoButtons.tmp
-	$(GCOV) -b TestTwoButtons.c++ | grep -A 5 "File 'TestTwoButtons.c++'" >> TestTwoButtons.tmp
-	cat TestTwoButtons.tmp
+TestDijkstra.tmp: TestDijkstra
+	./TestDijkstra                                                    >  TestDijkstra.tmp 2>&1
+	$(VALGRIND) ./TestDijkstra                                        >> TestDijkstra.tmp
+	$(GCOV) -b Dijkstra.c++     | grep -A 5 "File 'Dijkstra.c++'"     >> TestDijkstra.tmp
+	$(GCOV) -b TestDijkstra.c++ | grep -A 5 "File 'TestDijkstra.c++'" >> TestDijkstra.tmp
+	cat TestDijkstra.tmp
