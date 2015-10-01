@@ -16,8 +16,8 @@ using namespace std;
 
 class VertexLength;
 
-typedef std::list<VertexLength> VertexLengthList;
-typedef std::vector<VertexLengthList> Graph;
+typedef std::vector<VertexLength> VertexLengthVector;
+typedef std::vector<VertexLengthVector> Graph;
 typedef std::list<int> VertexList;
 
 // ------------

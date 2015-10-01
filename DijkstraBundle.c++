@@ -1,3 +1,44 @@
+
+#ifndef Dijkstra_h
+#define Dijkstra_h
+
+// --------
+// includes
+// --------
+
+#include <iostream>
+#include <string>
+#include <utility>
+#include <list>
+#include <vector>
+
+using namespace std;
+
+class VertexLength;
+
+typedef std::vector<VertexLength> VertexLengthVector;
+typedef std::vector<VertexLengthVector> Graph;
+typedef std::list<int> VertexList;
+
+// ------------
+// dijkstra_eval
+// ------------
+
+VertexList dijkstra_eval (const Graph& graph, int start_vertex, int end_vertex);
+
+// -------------
+// dijkstra_print
+// -------------
+
+void dijkstra_print (ostream& w, const VertexList& answer);
+
+// -------------
+// dijkstra_solve
+// -------------
+
+void dijkstra_solve (istream& r, ostream& w);
+
+#endif
 // ----------------------------
 // projects/twobuttons/Twobuttons.c++
 // Copyright (C) 2015
@@ -16,7 +57,7 @@
 #include <utility>
 #include <limits>
 
-#include "Dijkstra.h"
+
 
 using namespace std;
 
@@ -162,4 +203,18 @@ void dijkstra_solve (istream& r, ostream& w) {
 
   const VertexList answer = dijkstra_eval(graph, 0, num_vertices-1);
   dijkstra_print(w, answer);
+}
+
+#include <iostream>
+
+
+
+// ----
+// main
+// ----
+
+int main () {
+    using namespace std;
+    dijkstra_solve(cin, cout);
+    return 0;
 }
