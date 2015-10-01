@@ -18,7 +18,7 @@ class VertexLength;
 
 typedef std::vector<VertexLength> VertexLengthVector;
 typedef std::vector<VertexLengthVector> Graph;
-typedef std::list<int> VertexList;
+typedef std::vector<int> VertexList;
 
 // ------------
 // dijkstra_eval
@@ -148,7 +148,7 @@ VertexList dijkstra_eval (const Graph& graph, int start_vertex, int end_vertex)
 
 	else {
 	  q.emplace (vl.vertex, cumm_length, qe.path);
-	  q.back().path.push_back(vl.vertex);
+	  q.back().path.emplace_back(vl.vertex);
 	  v[vl.vertex].visited = true;
 	  v[vl.vertex].cumm_length = cumm_length;
 	}
