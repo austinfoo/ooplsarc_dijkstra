@@ -18,19 +18,19 @@ class VertexLength;
 
 typedef std::vector<VertexLength> VertexLengthVector;
 typedef std::vector<VertexLengthVector> Graph;
-typedef std::vector<int> VertexList;
+typedef std::vector<int> VertexVector;
 
 // ------------
 // dijkstra_eval
 // ------------
 
-VertexList dijkstra_eval (const Graph& graph, int start_vertex, int end_vertex);
+VertexVector dijkstra_eval (const Graph& graph, int start_vertex, int end_vertex);
 
 // -------------
 // dijkstra_print
 // -------------
 
-void dijkstra_print (ostream& w, const VertexList& answer);
+void dijkstra_print (ostream& w, const VertexVector& answer);
 
 // -------------
 // dijkstra_solve
@@ -80,7 +80,7 @@ public:
 class QueueEntry
 {
 public:
-  QueueEntry(int vertex_, int cumm_length_, VertexList path_) :
+  QueueEntry(int vertex_, int cumm_length_, VertexVector path_) :
     vertex (vertex_),
     cumm_length (cumm_length_),
     path (path_)
@@ -88,7 +88,7 @@ public:
 
   int vertex = 0;
   int cumm_length = 0;
-  VertexList path;
+  VertexVector path;
 };
 
 typedef std::queue<QueueEntry> Queue;
@@ -103,10 +103,10 @@ public:
 class Solution {
 public:
   int cumm_length = std::numeric_limits<int>::max();
-  VertexList path;
+  VertexVector path;
 };
 
-VertexList dijkstra_eval (const Graph& graph, int start_vertex, int end_vertex)
+VertexVector dijkstra_eval (const Graph& graph, int start_vertex, int end_vertex)
 {
   // Create the queue and seed it with the initial value.  Note that the stl queue 
   // uses funny list initialization with enclosing () because it is not a first class
@@ -140,9 +140,14 @@ VertexList dijkstra_eval (const Graph& graph, int start_vertex, int end_vertex)
       for (const VertexLength& vl : graph[qe.vertex]) {
 
 	int cumm_length = qe.cumm_length + vl.length;
+
+	// If the current cummulative length is already greater than our current solution then there is no need to keep it
+	if (cumm_length >= solution.cumm_length) {
+	  // Throw it away
+	}
      
 	// If we have seen this vertex before, don't keep it if it is longer than a previous visit
-	if (v[vl.vertex].visited && (cumm_length > v[vl.vertex].cumm_length)) {
+	else if (v[vl.vertex].visited && (cumm_length >= v[vl.vertex].cumm_length)) {
 	  // Throw it away
 	}
 
@@ -163,7 +168,7 @@ VertexList dijkstra_eval (const Graph& graph, int start_vertex, int end_vertex)
 // dijkstra_print
 // -------------
 
-void dijkstra_print (ostream& w, const VertexList& answer) {
+void dijkstra_print (ostream& w, const VertexVector& answer) {
   if (answer.size() == 0) {
     w << "-1" << std::endl;
   } else {
@@ -201,7 +206,7 @@ void dijkstra_solve (istream& r, ostream& w) {
     graph[vertex2-1].emplace_back(vertex1-1, length);
   }
 
-  const VertexList answer = dijkstra_eval(graph, 0, num_vertices-1);
+  const VertexVector answer = dijkstra_eval(graph, 0, num_vertices-1);
   dijkstra_print(w, answer);
 }
 

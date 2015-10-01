@@ -99,9 +99,14 @@ VertexVector dijkstra_eval (const Graph& graph, int start_vertex, int end_vertex
       for (const VertexLength& vl : graph[qe.vertex]) {
 
 	int cumm_length = qe.cumm_length + vl.length;
+
+	// If the current cummulative length is already greater than our current solution then there is no need to keep it
+	if (cumm_length >= solution.cumm_length) {
+	  // Throw it away
+	}
      
 	// If we have seen this vertex before, don't keep it if it is longer than a previous visit
-	if (v[vl.vertex].visited && (cumm_length > v[vl.vertex].cumm_length)) {
+	else if (v[vl.vertex].visited && (cumm_length >= v[vl.vertex].cumm_length)) {
 	  // Throw it away
 	}
 
