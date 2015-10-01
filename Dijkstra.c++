@@ -14,7 +14,7 @@
 #include <string>   // getline, string
 #include <queue>
 #include <utility>
-#include <limits>
+#include <cstdint>
 
 #include "Dijkstra.h"
 
@@ -39,14 +39,14 @@ public:
 class QueueEntry
 {
 public:
-  QueueEntry(int vertex_, int cumm_length_, VertexVector path_) :
+  QueueEntry(int vertex_, int64_t cumm_length_, VertexVector path_) :
     vertex (vertex_),
     cumm_length (cumm_length_),
     path (path_)
   {}
 
   int vertex = 0;
-  int cumm_length = 0;
+  int64_t cumm_length = 0;
   VertexVector path;
 };
 
@@ -56,12 +56,12 @@ class VisitEntry
 {
 public:
   bool visited = false;
-  int cumm_length = 0;
+  int64_t cumm_length = 0;
 };
 
 class Solution {
 public:
-  int cumm_length = std::numeric_limits<int>::max();
+  int64_t cumm_length = INT64_MAX;
   VertexVector path;
 };
 
@@ -105,7 +105,7 @@ VertexVector dijkstra_eval (const Graph& graph, int start_vertex, int end_vertex
     {
       for (const VertexLength& vl : graph[qe.vertex]) {
 
-	int cumm_length = qe.cumm_length + vl.length;
+	int64_t cumm_length = qe.cumm_length + vl.length;
 
 	// If the current cummulative length is already greater than our current solution then there is no need to keep it
 	if (cumm_length >= solution.cumm_length) {
