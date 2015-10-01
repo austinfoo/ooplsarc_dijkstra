@@ -65,6 +65,13 @@ public:
   VertexVector path;
 };
 
+// More optimization ideas:
+// - We can remove the visited bool.  We really don't need it.
+// - We copy the path a lot.  Maybe we can share it somehow.
+// - Instead of a simple queue to manage what path we work on next,
+//   maybe we should come up with some data structure to work on
+//   the current shortest path next.
+
 VertexVector dijkstra_eval (const Graph& graph, int start_vertex, int end_vertex)
 {
   // Create the queue and seed it with the initial value.  Note that the stl queue 
