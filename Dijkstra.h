@@ -25,7 +25,7 @@ typedef std::list<int> VertexList;
 // dijkstra_eval
 // ------------
 
-VertexList dijkstra_eval (const Graph& graph, int start_vertex, int end_vertex);
+VertexList dijkstra_eval (const Graph& graph, int start_vertex_num, int end_vertex_num);
 
 // -------------
 // dijkstra_print
