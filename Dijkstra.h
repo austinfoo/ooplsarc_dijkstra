@@ -19,18 +19,19 @@ class VertexLength;
 typedef std::vector<VertexLength> VertexLengthVector;
 typedef std::vector<VertexLengthVector> Graph;
 typedef std::vector<int> VertexVector;
+typedef std::list<int> VertexList;
 
 // ------------
 // dijkstra_eval
 // ------------
 
-VertexVector dijkstra_eval (const Graph& graph, int start_vertex, int end_vertex);
+VertexList dijkstra_eval (const Graph& graph, int start_vertex, int end_vertex);
 
 // -------------
 // dijkstra_print
 // -------------
 
-void dijkstra_print (ostream& w, const VertexVector& answer);
+void dijkstra_print (ostream& w, const VertexList& answer);
 
 // -------------
 // dijkstra_solve

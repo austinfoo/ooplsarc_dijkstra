@@ -19,18 +19,19 @@ class VertexLength;
 typedef std::vector<VertexLength> VertexLengthVector;
 typedef std::vector<VertexLengthVector> Graph;
 typedef std::vector<int> VertexVector;
+typedef std::list<int> VertexList;
 
 // ------------
 // dijkstra_eval
 // ------------
 
-VertexVector dijkstra_eval (const Graph& graph, int start_vertex, int end_vertex);
+VertexList dijkstra_eval (const Graph& graph, int start_vertex, int end_vertex);
 
 // -------------
 // dijkstra_print
 // -------------
 
-void dijkstra_print (ostream& w, const VertexVector& answer);
+void dijkstra_print (ostream& w, const VertexList& answer);
 
 // -------------
 // dijkstra_solve
@@ -80,15 +81,15 @@ public:
 class QueueEntry
 {
 public:
-  QueueEntry(int vertex_, int64_t cumm_length_, VertexVector path_) :
+  QueueEntry(int vertex_, int64_t cumm_length_, int64_t our_path_history_idx_) :
     vertex (vertex_),
     cumm_length (cumm_length_),
-    path (path_)
+    our_path_history_idx (our_path_history_idx_)
   {}
 
   int vertex = 0;
   int64_t cumm_length = 0;
-  VertexVector path;
+  int64_t our_path_history_idx = 0;
 };
 
 typedef std::queue<QueueEntry> Queue;
@@ -103,8 +104,22 @@ public:
 class Solution {
 public:
   int64_t cumm_length = INT64_MAX;
-  VertexVector path;
+  int64_t path_history_idx = -1;
 };
+
+
+class BreadCrumb {
+public:
+  BreadCrumb (int64_t parent_idx_, int vertex_num_) :
+    parent_idx (parent_idx_),
+    vertex_num (vertex_num_)
+  {}
+
+  int64_t parent_idx = 0;
+  int vertex_num = 0;
+};
+
+typedef std::vector<BreadCrumb> PathHistory;
 
 // More optimization ideas:
 // - We can remove the visited bool.  We really don't need it.
@@ -113,12 +128,16 @@ public:
 //   maybe we should come up with some data structure to work on
 //   the current shortest path next.
 
-VertexVector dijkstra_eval (const Graph& graph, int start_vertex, int end_vertex)
+VertexList dijkstra_eval (const Graph& graph, int start_vertex, int end_vertex)
 {
+  // Create path history structure
+  PathHistory path_history { {-1, start_vertex} };
+
   // Create the queue and seed it with the initial value.  Note that the stl queue 
   // uses funny list initialization with enclosing () because it is not a first class
   // container.  It is a container adaptor using a deque underneath.
-  Queue q ({ {start_vertex, 0, {start_vertex}} });
+  // The second 0 is the index into the path history structure for the seed entry.
+  Queue q ({ {start_vertex, 0, 0} });
 
   // Create visit vector
   std::vector<VisitEntry> v (graph.size());
@@ -138,7 +157,7 @@ VertexVector dijkstra_eval (const Graph& graph, int start_vertex, int end_vertex
     {
       if (qe.cumm_length < solution.cumm_length) {
 	solution.cumm_length = qe.cumm_length;
-	solution.path = qe.path;
+	solution.path_history_idx = qe.our_path_history_idx;
       }
     }
 
@@ -159,8 +178,9 @@ VertexVector dijkstra_eval (const Graph& graph, int start_vertex, int end_vertex
 	}
 
 	else {
-	  q.emplace (vl.vertex, cumm_length, qe.path);
-	  q.back().path.emplace_back(vl.vertex);
+
+	  path_history.emplace_back(qe.our_path_history_idx, vl.vertex);
+	  q.emplace (vl.vertex, cumm_length, path_history.size()-1);
 	  v[vl.vertex].visited = true;
 	  v[vl.vertex].cumm_length = cumm_length;
 	}
@@ -168,14 +188,23 @@ VertexVector dijkstra_eval (const Graph& graph, int start_vertex, int end_vertex
     }
   }
 
-  return solution.path;
+  // Now reconstruct the path
+  VertexList answer;
+  int64_t i = solution.path_history_idx;
+  while (i != -1) {
+      const BreadCrumb& crumb = path_history[i];
+      i = crumb.parent_idx;
+      answer.push_front(crumb.vertex_num);
+  }
+
+  return answer;
 }
 
 // -------------
 // dijkstra_print
 // -------------
 
-void dijkstra_print (ostream& w, const VertexVector& answer) {
+void dijkstra_print (ostream& w, const VertexList& answer) {
   if (answer.size() == 0) {
     w << "-1" << std::endl;
   } else {
@@ -213,7 +242,7 @@ void dijkstra_solve (istream& r, ostream& w) {
     graph[vertex2-1].emplace_back(vertex1-1, length);
   }
 
-  const VertexVector answer = dijkstra_eval(graph, 0, num_vertices-1);
+  const VertexList answer = dijkstra_eval(graph, 0, num_vertices-1);
   dijkstra_print(w, answer);
 }
 
